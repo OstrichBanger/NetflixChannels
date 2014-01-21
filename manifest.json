@@ -1,9 +1,9 @@
 {
-  "name": "CHANGE THIS : Extension boilerplate",
+  "name": "Netflix Channels",
   "version": "0.0.1",
   "manifest_version": 2,
-  "description": "This extension was created with the awesome extensionizr.io",
-  "homepage_url": "http://extensionizr.com",
+  "description": "Create channels to watch random episodes of your favorite shows on Netflix.",
+  "homepage_url": "http://jonost.me",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -25,7 +25,7 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.google.com/*"
+        "*://*.netflix.com/*"
       ],
       "css": [
         "src/inject/inject.css"
@@ -33,7 +33,7 @@
     },
     {
       "matches": [
-        "https://www.google.com/*"
+        "*://*.netflix.com/*"
       ],
       "js": [
         "src/inject/inject.js"
