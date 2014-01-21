@@ -17,9 +17,7 @@
   "browser_action": {
     "default_icon": "icons/icon19.png",
     "default_title": "Manage Channels",
-    "default_popup": "src/browser_action/browser_action.html",
-    "js": ["/js/jquery/jquery.js", "/js/browser_action.js"],
-    "css": ["css/nc-style.css"]
+    "default_popup": "src/browser_action/browser_action.html"
   },
   "permissions": [
     "*://*.netflix.com/*"

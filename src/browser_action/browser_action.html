@@ -1,18 +1,22 @@
 <!DOCTYPE html>
+
 <head>
   <meta charset="utf-8">
   <title>Netflix Channels</title>
   <link rel="stylesheet" href="/css/nc-style.css">
-  <script src="/js/jquery/jquery.js"></script>
-  <script src="/js/browser_action.js"></script>
 </head>
+
 <body>
+<script src="/js/jquery/jquery.js"></script>
+<script src="/js/browser_action.js"></script>
+
 <div id="nc-popup">
+
   <h1>Netflix Channels</h1>
 
-  <p id="channels" class="content">
-<!--   	<a class="nc-new-channel">New Channel</a> -->
-    <input type="button" value="New Channel" onclick="addChannel()">
+  <p id="channellist" class="content">
+  <a class="nc-channel-name"></a>
+  <a id="channels" class="nc-new-channel">New Channel</a>
   </p>
 
   <p class="footer">
