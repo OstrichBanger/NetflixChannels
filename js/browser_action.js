@@ -7,8 +7,8 @@ $(function() {
    				value = "<div class='chan-names' id='" + key + "'>" + val + "<input type='button' class='removeButton' value='x' id='remove" + key + "'></div>";
 				$(".nc-channel-name").append(value);
 				document.getElementById('remove' + key).addEventListener('click',function(){
-					chrome.storage.sync.remove(keyName);
-					$("#" + key).remove();
+					chrome.storage.sync.remove(key);
+					$('#' + key).remove();
 				});
 			};
 		};
@@ -22,7 +22,7 @@ $(function() {
     		var Obj = {};
     		Obj[keyName]=newChannelName;
     		chrome.storage.sync.set(Obj);
-    		$(".nc-channel-name").append("<div class='chan-name' id='chan-" + nospace + "'>" + newChannelName + "<input type='button' class='removeButton' value='x' id='remove" + nospace + "'></div>");
+    		$(".nc-channel-name").append("<div class='chan-name' id='"+keyName+"'>" + newChannelName + "<input type='button' class='removeButton' value='x' id='remove" + nospace + "'></div>");
     		
     		document.getElementById('remove' + nospace).addEventListener('click',function(){
 				chrome.storage.sync.remove(keyName);

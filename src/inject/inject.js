@@ -36,9 +36,10 @@ $(document).ready(function() {
 					    	var testvar1 = 0;
 					        // multiple seasons listed, load each tab and get the episodes					        
 					        seasons.each(function (i,e) {
-					            $.getJSON(seriesHref + "&actionMethod=seasonDetails&seasonId=" + $(e).attr("data-vid") + "&seasonKind=ELECTRONIC", function(data,textStatus) {
+					        	console.log(seriesHref + "&actionMethod=seasonDetails&seasonId=" + $(e).attr("data-vid") + "&seasonKind=ELECTRONIC");
+					            var whatever = $.getJSON(seriesHref + "&actionMethod=seasonDetails&seasonId=" + $(e).attr("data-vid") + "&seasonKind=ELECTRONIC", function(data,textStatus) {
 					                
-					                var href = [];// var columndata = data.html.querySelector('.episodeList');
+					                // var href = [];// var columndata = data.html.querySelector('.episodeList');
 					                var stringData = data.html;
 					                stringData = stringData.replace(/(\r\n|\n|\r)/gm,"");
 					                stringData = stringData.replace(/\>\s+\</g,'\>\<');
@@ -48,21 +49,16 @@ $(document).ready(function() {
 					                // console.log(stringData);
 					                var whatever = stringData[0];
 					                // console.log(whatever);
-					                var why = $(whatever).find("li");
-					                $(whatever).find('a').each(function(){
-					                	var href = $(this).attr('href');
-					                	hrefs.push(href);
-					                });
-					                console.log(hrefs);
-					                var dataLength = seasonsData.length;
-				                	for (i=0;i<why.length;i++) {
-					                    dataLength++;
-					                    var addit = why[i];
-					                    seasonsData.push(addit);
-					                }
-					                // console.log(seasonsData);
-					                return hrefs;
+					                return whatever;
 					            });
+					            whatever=whatever.responseText;
+					            console.log(whatever);
+					            var why = $(whatever).find("li");
+					            $(whatever).find('a').each(function(){
+					                var href = $(this).attr('href');
+					                hrefs.push(href);
+					            });
+
 					        });
 					    } else {
 					        // just one season, no need to load more tabs
