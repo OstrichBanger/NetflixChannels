@@ -1,27 +1,33 @@
 $(function() {
 
-	for(var i in localStorage){
-		localKey = localStorage.key(i);
-   		val = localStorage.getItem(i); 
-   		value = "<div class='chan-names' id='" + localKey + "'>" + val + "<input type='button' class='removeButton' value='x' id='remove" + localKey + "'></div>";
-		$(".nc-channel-name").append(value);
-		document.getElementById('remove' + localKey).addEventListener('click',function(){
-			localStorage.removeItem(i);
-			$("#" + localKey).remove();
-		});
-	};
+	chrome.storage.sync.get(null, function (result) {
+		for(var key in result){
+			if (key.substring(0,5) == 'chan-'){
+   				val = result[key]; 
+   				value = "<div class='chan-names' id='" + key + "'>" + val + "<input type='button' class='removeButton' value='x' id='remove" + key + "'></div>";
+				$(".nc-channel-name").append(value);
+				document.getElementById('remove' + key).addEventListener('click',function(){
+					chrome.storage.sync.remove(keyName);
+					$("#" + key).remove();
+				});
+			};
+		};
+	});
 
 	document.getElementById('channels').addEventListener('click',function(){
     	newChannelName = prompt("Enter New Channel Name:", "");
     	if (newChannelName!=null) {
     		var nospace = newChannelName.replace(/ /g, '');
-    		localStorage['chan-'+nospace] = newChannelName;
+    		var keyName = 'chan-' + nospace;
+    		var Obj = {};
+    		Obj[keyName]=newChannelName;
+    		chrome.storage.sync.set(Obj);
     		$(".nc-channel-name").append("<div class='chan-name' id='chan-" + nospace + "'>" + newChannelName + "<input type='button' class='removeButton' value='x' id='remove" + nospace + "'></div>");
     		
     		document.getElementById('remove' + nospace).addEventListener('click',function(){
-				localStorage.removeItem("chan-"+nospace);
+				chrome.storage.sync.remove(keyName);
 				$("#chan-" + nospace).remove();
 			});
-    	}
+    	};
   	});
 });

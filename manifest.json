@@ -20,22 +20,19 @@
     "default_popup": "src/browser_action/browser_action.html"
   },
   "permissions": [
+    "storage",
     "*://*.netflix.com/*"
   ],
   "content_scripts": [
     {
       "matches": [
-        "*://*.netflix.com/*"
+        "*://*.netflix.com/WiMovie/*"
       ],
       "css": [
         "src/inject/inject.css"
-      ]
-    },
-    {
-      "matches": [
-        "*://*.netflix.com/*"
       ],
       "js": [
+        "js/jquery/jquery.js", 
         "src/inject/inject.js"
       ]
     }

@@ -1,0 +1,22 @@
+.svf-button-add .inr {
+background: url(/imgs/add_tiny.png) no-repeat 7px 7px;
+text-indent: 16px;
+}
+.svfb-silver span, .svfb-default span {
+color: #191919;
+text-shadow: none;
+}
+.svf-button input, .svf-button span {
+border: none;
+height: 28px;
+padding: 0 10px;
+line-height: 28px;
+font-size: 14px;
+display: block;
+}
+.svf-button {
+zoom: 1;
+cursor: pointer;
+font-family: arial, helvetica, sans-serif;
+font-weight: bold;
+}
