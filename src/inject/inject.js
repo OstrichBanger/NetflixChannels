@@ -7,7 +7,7 @@ $(document).ready(function() {
    			val = result[key];
    			if (key.substring(0,5) == "chan-") {
    				var containCheck = Object.keys(result);
-   				var checkKey = key.substring(5) + showName;
+   				var checkKey = key.substring(5) + '-' + showName;
    				if (containCheck.indexOf(checkKey) > -1) {
    					var addButton = "<span class='addChannel btnWrap mltBtn mltBtn-s60'><a id='" + key + "' class='svf-button svfb-silver addlk evo-btn save2add svf-button-add'><span class='remove'>Remove from " + val + "</span></a></span>";
    					$('.actions').append(addButton);
@@ -20,7 +20,8 @@ $(document).ready(function() {
 					$('.actions').append(addButton);
 					document.getElementById(key).addEventListener('click',function () {
 						Obj = {};
-						Obj[key.substring(5) + showName] = showName.replace(/_/g, " ");
+						Obj[key.substring(5) + '-' + showName] = showName.replace(/_/g, " ");
+						console.log(Obj);
 						chrome.storage.sync.set(Obj);
 						document.getElementById(key).innerHTML="<span class='inr'>Added to " + val + "</span>";
 
@@ -30,16 +31,13 @@ $(document).ready(function() {
 					    // assume the current window location is the series page
 					    var seriesHref = window.location.href.replace("#","");
 					    seasons = $("#seasonsNav .seasonItem a");
-					    var seasonsData;
-					    var hrefs=[];
+					    var hrefs = [];
+						var promiseDone;
 					    if(seasons.length) {
-					    	var testvar1 = 0;
 					        // multiple seasons listed, load each tab and get the episodes					        
 					        seasons.each(function (i,e) {
-					        	console.log(seriesHref + "&actionMethod=seasonDetails&seasonId=" + $(e).attr("data-vid") + "&seasonKind=ELECTRONIC");
-					            var whatever = $.getJSON(seriesHref + "&actionMethod=seasonDetails&seasonId=" + $(e).attr("data-vid") + "&seasonKind=ELECTRONIC", function(data,textStatus) {
-					                
-					                // var href = [];// var columndata = data.html.querySelector('.episodeList');
+					        	var episodeList = [];
+					            var asyncJSON = $.getJSON(seriesHref + "&actionMethod=seasonDetails&seasonId=" + $(e).attr("data-vid") + "&seasonKind=ELECTRONIC", function(data,textStatus) {
 					                var stringData = data.html;
 					                stringData = stringData.replace(/(\r\n|\n|\r)/gm,"");
 					                stringData = stringData.replace(/\>\s+\</g,'\>\<');
@@ -47,27 +45,46 @@ $(document).ready(function() {
 					                // stringData = stringData.replace(/&/g,"&amp;");
 					                stringData = stringData.match(/<ul.*ul>/g);
 					                // console.log(stringData);
-					                var whatever = stringData[0];
-					                // console.log(whatever);
-					                return whatever;
+					                episodeList.push(stringData);
 					            });
-					            whatever=whatever.responseText;
-					            console.log(whatever);
-					            var why = $(whatever).find("li");
-					            $(whatever).find('a').each(function(){
-					                var href = $(this).attr('href');
-					                hrefs.push(href);
-					            });
-
+					            promiseDone = asyncJSON.promise().done(function () {
+									var test2 = JSON.stringify(episodeList[0]);
+									test2 = test2.replace(/\[\"/g,"");
+									test2 = test2.replace(/\"\]/g,"");
+									test2 = test2.replace(/\\\"/g,'"');
+									/* console.log(test2); */
+									$(test2).find("a").each(function () {
+										var test1 = $(this);
+										hrefs.push($(this).attr('href'));
+										/* console.log(hrefs); */
+									});
+								});
 					        });
+						
+							promiseDone.promise().done(function () {
+								var showHREFS = JSON.stringify(hrefs);
+								var showStorageKey = checkKey + "-urls";
+								var urlObj = {};
+								urlObj[showStorageKey] = showHREFS;
+								console.log(urlObj);
+								chrome.storage.sync.set(urlObj); 
+								chrome.storage.sync.get(null, function (restults){
+									console.log(restults);
+								});
+							});
+						
 					    } else {
 					        // just one season, no need to load more tabs
 					        $("#seasonDetail").find("a").each(function () {
+								console.log($(this));
 					            hrefs.push($(this).attr('href'));
 					        });
+							var showHREFS = JSON.stringify(hrefs);
+							var showStorageKey = checkKey + "-urls";
+							var urlObj = {};
+							urlObj[showStorageKey] = showHREFS;
+							chrome.storage.sync.set(urlObj);
 					    }
-						console.log(seasonsData);
-						console.log(hrefs);
 					});
 				}
     		}
