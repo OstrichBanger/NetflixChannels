@@ -9,16 +9,22 @@ $(function() {
 				$(".nc-channel-name").append(value);
 				document.getElementById('play' + key).addEventListener('click',function(){
 					chrome.storage.sync.get(null, function (hrefObj) {
+						console.log(hrefObj);
+						var hrefs = [];
 						for (var key in hrefObj){
-   							var playLinks = result[key];
-   							var hrefs = {};
-   							console.log(key.indexOf(channelNoSpace));
-   							/*if (key.indexOf(channelNoSpace) == 0) {
+   							var yesorno = result[key];
+   							var test = (key.indexOf(channelNoSpace) == 0) && key.substring(key.length-12) == '-morethanone';
+   							if (test && yesorno == 1) {
+   								playLinks = playLinks.replace(/\[\"/g,'');
+   								playLinks = playLinks.replace(/\"\]/g,'');
+   								playLinks = playLinks.replace(/\"\,\"/g,',');
    								playLinks = playLinks.split(',');
-   								console.log(playLinks);
-   								// hrefs.push()
-   							}*/
+   								for (var i in playLinks){
+   									hrefs.push(playLinks[i]);
+   								}
+   							}
    						}
+   						console.log(hrefs);
 					});
 				});
 				document.getElementById('remove' + key).addEventListener('click',function(){
@@ -37,8 +43,10 @@ $(function() {
     		var Obj = {};
     		Obj[keyName]=newChannelName;
     		chrome.storage.sync.set(Obj);
-    		$(".nc-channel-name").append("<div class='chan-name' id='"+keyName+"'>" + newChannelName + "<input type='button' class='removeButton' value='x' id='remove" + nospace + "'></div>");
-    		
+    		$(".nc-channel-name").append("<div class='chan-names' id='"+keyName+"'><input type='button' class='playButton' id='play" + keyName + "'>" + newChannelName + "<input type='button' class='removeButton' value='x' id='remove" + nospace + "'></div>");
+    		document.getElementById('play' + keyName).addEventListener('click',function(){
+    			alert('Visit Netflix and add TV shows to play this channel.');
+    		})
     		document.getElementById('remove' + nospace).addEventListener('click',function(){
 				chrome.storage.sync.remove(keyName);
 				$("#chan-" + nospace).remove();

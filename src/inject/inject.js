@@ -27,12 +27,45 @@ $(document).ready(function() {
 						chrome.storage.sync.set(Obj);
 						document.getElementById(key).innerHTML="<span class='inr'>Added to " + val + "</span>";
 						var seasons = null;
-					    // assume the current window location is the series page
 					    var seriesHref = window.location.href.replace("#","");
 					    seasons = $("#seasonsNav .seasonItem a");
+
+						if(seasons.length) {
+							var seasonStorage = {};
+							var dataVid;
+							var q = 0;
+							seasons.each(function (i,e){
+								var j = $(e).attr("data-vid");
+								if (q == 0) {
+									dataVid = j;
+									q = 1;
+								}
+								else{
+									dataVid += ',';
+									dataVid += j;
+								}
+							});
+							console.log(dataVid);
+							seasonStorage[checkKey + '-dataVid']=dataVid;
+							seasonStorage[checkKey + '-morethanone']=1;
+							chrome.storage.sync.set(seasonStorage);
+							chrome.storage.sync.get(null, function (resulting) {
+								console.log(resulting);
+							});
+						}
+						else{
+							var seasonStorage = {};
+							seasonStorage[checkKey + '-morethanone']=0;
+							seasonStorage[checkKey + '-showURL']=document.URL;
+							chrome.storage.sync.set(seasonStorage);
+							chrome.storage.sync.get(null, function (resulting) {
+								console.log(resulting);
+							});
+						}
+
 					    var hrefs = [];
 						var promiseDone;
-					    if(seasons.length) {
+/*					    if(seasons.length) {
 					        // multiple seasons listed, load each tab and get the episodes					        
 					        seasons.each(function (i,e) {
 					        	var episodeList = [];
@@ -43,7 +76,6 @@ $(document).ready(function() {
 					                stringData = stringData.replace(/\s{3,}/g,'');
 					                // stringData = stringData.replace(/&/g,"&amp;");
 					                stringData = stringData.match(/<ul.*ul>/g);
-					                // console.log(stringData);
 					                episodeList.push(stringData);
 					            });
 					            promiseDone = asyncJSON.promise().done(function () {
@@ -51,11 +83,10 @@ $(document).ready(function() {
 									test2 = test2.replace(/\[\"/g,"");
 									test2 = test2.replace(/\"\]/g,"");
 									test2 = test2.replace(/\\\"/g,'"');
-									/* console.log(test2); */
+									/* console.log(test2); 
 									$(test2).find("a").each(function () {
 										var test1 = $(this);
 										hrefs.push($(this).attr('href'));
-										/* console.log(hrefs); */
 									});
 								});
 					        });
@@ -65,7 +96,11 @@ $(document).ready(function() {
 								var showStorageKey = checkKey + "-urls";
 								var urlObj = {};
 								urlObj[showStorageKey] = showHREFS;
+								console.log(urlObj);
 								chrome.storage.sync.set(urlObj);
+								chrome.storage.sync.get(null, function (gaysults){
+									console.log(gaysults);
+								});
 							});
 						
 					    } else {
@@ -79,7 +114,7 @@ $(document).ready(function() {
 							var urlObj = {};
 							urlObj[showStorageKey] = showHREFS;
 							chrome.storage.sync.set(urlObj);
-					    }
+					    } */
 					});
 				}
     		}
