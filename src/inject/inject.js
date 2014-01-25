@@ -13,6 +13,8 @@ $(document).ready(function() {
    					$('.actions').append(addButton);
    					document.getElementById(key).addEventListener('click',function () {
    						chrome.storage.sync.remove(checkKey);
+   						var checkKeyUrls = checkKey + "-urls";
+   						chrome.storage.sync.remove(checkKeyUrls);
    					});
    				}		
    				else {
@@ -24,9 +26,6 @@ $(document).ready(function() {
 						console.log(Obj);
 						chrome.storage.sync.set(Obj);
 						document.getElementById(key).innerHTML="<span class='inr'>Added to " + val + "</span>";
-
-						// start of seasonData code
-
 						var seasons = null;
 					    // assume the current window location is the series page
 					    var seriesHref = window.location.href.replace("#","");
@@ -66,11 +65,7 @@ $(document).ready(function() {
 								var showStorageKey = checkKey + "-urls";
 								var urlObj = {};
 								urlObj[showStorageKey] = showHREFS;
-								console.log(urlObj);
-								chrome.storage.sync.set(urlObj); 
-								chrome.storage.sync.get(null, function (restults){
-									console.log(restults);
-								});
+								chrome.storage.sync.set(urlObj);
 							});
 						
 					    } else {
