@@ -15,6 +15,27 @@ $(document).ready(function() {
    						chrome.storage.sync.remove(checkKey);
    						var checkKeyUrls = checkKey + "-urls";
    						chrome.storage.sync.remove(checkKeyUrls);
+   						chrome.storage.sync.remove(checkKey + '-dataVid');
+						chrome.storage.sync.remove(checkKey + '-morethanone');
+						chrome.storage.sync.remove(checkKey + '-seriesHref');
+						chrome.storage.sync.remove(checkKey + '-showURL');
+						var getShows = key.substring(5) + '-shows';
+						chrome.storage.sync.get(getShows,function (showNames){
+							var channelShows = showNames[getShows];
+							var showObj = {};
+							if (channelShows.indexOf(',') != -1){
+								if (channelShows.indexOf(showName) != (channelShows.length - showName.length)) {
+									showObj[getShows] = channelShows.replace(showName + ',', '');
+								}
+								else {
+									showObj[getShows] = channelShows.replace(',' + showName, '');
+								}
+							}
+							else {
+								showObj[getShows] = null;
+							}
+							chrome.storage.sync.set(showObj);
+						});
    					});
    				}		
    				else {
@@ -23,6 +44,20 @@ $(document).ready(function() {
 					document.getElementById(key).addEventListener('click',function () {
 						Obj = {};
 						Obj[key.substring(5) + '-' + showName] = showName.replace(/_/g, " ");
+						var getShows = key.substring(5) + '-shows';
+						console.log(getShows);
+						chrome.storage.sync.get(getShows, function (showNames) {
+							var showObj = {};
+							console.log(showNames);
+							if (showNames[getShows] == null) {
+								showObj[getShows] = showName;
+							}
+							else {
+								showObj[getShows] = showNames[getShows] + ',' + showName;
+							}
+							console.log(showObj);
+							chrome.storage.sync.set(showObj);
+						});
 						console.log(Obj);
 						chrome.storage.sync.set(Obj);
 						document.getElementById(key).innerHTML="<span class='inr'>Added to " + val + "</span>";
@@ -48,6 +83,7 @@ $(document).ready(function() {
 							console.log(dataVid);
 							seasonStorage[checkKey + '-dataVid']=dataVid;
 							seasonStorage[checkKey + '-morethanone']=1;
+							seasonStorage[checkKey + '-seriesHref']=seriesHref;
 							chrome.storage.sync.set(seasonStorage);
 							chrome.storage.sync.get(null, function (resulting) {
 								console.log(resulting);
@@ -62,59 +98,6 @@ $(document).ready(function() {
 								console.log(resulting);
 							});
 						}
-
-					    var hrefs = [];
-						var promiseDone;
-/*					    if(seasons.length) {
-					        // multiple seasons listed, load each tab and get the episodes					        
-					        seasons.each(function (i,e) {
-					        	var episodeList = [];
-					            var asyncJSON = $.getJSON(seriesHref + "&actionMethod=seasonDetails&seasonId=" + $(e).attr("data-vid") + "&seasonKind=ELECTRONIC", function(data,textStatus) {
-					                var stringData = data.html;
-					                stringData = stringData.replace(/(\r\n|\n|\r)/gm,"");
-					                stringData = stringData.replace(/\>\s+\</g,'\>\<');
-					                stringData = stringData.replace(/\s{3,}/g,'');
-					                // stringData = stringData.replace(/&/g,"&amp;");
-					                stringData = stringData.match(/<ul.*ul>/g);
-					                episodeList.push(stringData);
-					            });
-					            promiseDone = asyncJSON.promise().done(function () {
-									var test2 = JSON.stringify(episodeList[0]);
-									test2 = test2.replace(/\[\"/g,"");
-									test2 = test2.replace(/\"\]/g,"");
-									test2 = test2.replace(/\\\"/g,'"');
-									/* console.log(test2); 
-									$(test2).find("a").each(function () {
-										var test1 = $(this);
-										hrefs.push($(this).attr('href'));
-									});
-								});
-					        });
-						
-							promiseDone.promise().done(function () {
-								var showHREFS = JSON.stringify(hrefs);
-								var showStorageKey = checkKey + "-urls";
-								var urlObj = {};
-								urlObj[showStorageKey] = showHREFS;
-								console.log(urlObj);
-								chrome.storage.sync.set(urlObj);
-								chrome.storage.sync.get(null, function (gaysults){
-									console.log(gaysults);
-								});
-							});
-						
-					    } else {
-					        // just one season, no need to load more tabs
-					        $("#seasonDetail").find("a").each(function () {
-								console.log($(this));
-					            hrefs.push($(this).attr('href'));
-					        });
-							var showHREFS = JSON.stringify(hrefs);
-							var showStorageKey = checkKey + "-urls";
-							var urlObj = {};
-							urlObj[showStorageKey] = showHREFS;
-							chrome.storage.sync.set(urlObj);
-					    } */
 					});
 				}
     		}
