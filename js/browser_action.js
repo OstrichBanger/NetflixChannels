@@ -1,5 +1,4 @@
 $(function() {
-
 	chrome.storage.sync.get(null, function (result) {
 		for(var key in result){
 			if (key.substring(0,5) == 'chan-'){
@@ -95,22 +94,29 @@ $(function() {
 	});
 
 	document.getElementById('channels').addEventListener('click',function(){
-    	newChannelName = prompt("Enter New Channel Name:", "");
-    	if (newChannelName!=null) {
-    		var nospace = newChannelName.replace(/ /g, '');
-    		var keyName = 'chan-' + nospace;
-    		var Obj = {};
-    		Obj[keyName]=newChannelName;
-    		Obj[nospace + '-shows']= null;
-    		chrome.storage.sync.set(Obj);
-    		$(".nc-channel-name").append("<div class='chan-names' id='"+keyName+"'><input type='button' class='playButton' id='play" + keyName + "'>" + newChannelName + "<input type='button' class='removeButton' value='x' id='remove" + nospace + "'></div>");
-    		document.getElementById('play' + keyName).addEventListener('click',function(){
-    			alert('Visit Netflix and add TV shows to play this channel.');
-    		})
-    		document.getElementById('remove' + nospace).addEventListener('click',function(){
-				chrome.storage.sync.remove(keyName);
-				$("#chan-" + nospace).remove();
-			});
-    	};
+		$('#newChannel').remove();
+    	$('<input type="text" id="newChannel" maxlength="24" placeholder="Enter..." width="100">').insertAfter('#channels');
+    	$('#newChannel').bind('keypress', function(e) {
+			if(e.keyCode==13){
+				var newChannelName = $(this).val()
+		    	if (newChannelName!=null) {
+		    		var nospace = newChannelName.replace(/ /g, '');
+		    		var keyName = 'chan-' + nospace;
+		    		var Obj = {};
+		    		Obj[keyName]=newChannelName;
+		    		Obj[nospace + '-shows']= null;
+		    		chrome.storage.sync.set(Obj);
+		    		$(".nc-channel-name").append("<div class='chan-names' id='"+keyName+"'><input type='button' class='playButton' id='play" + keyName + "'>" + newChannelName + "<input type='button' class='removeButton' value='x' id='remove" + nospace + "'></div>");
+		    		document.getElementById('play' + keyName).addEventListener('click',function(){
+		    			alert('Visit Netflix and add TV shows to play this channel.');
+		    		})
+		    		document.getElementById('remove' + nospace).addEventListener('click',function(){
+						chrome.storage.sync.remove(keyName);
+						$("#chan-" + nospace).remove();
+					});
+					$(this).remove();
+		    	};
+			}
+		});
   	});
-});
+});	
