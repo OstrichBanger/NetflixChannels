@@ -56,6 +56,7 @@ $(function() {
 													var newTab = {};
 													newTab['url'] = hrefs[Math.floor((Math.random()*hrefs.length))];
 													chrome.tabs.create(newTab);
+													chrome.tabs.reload();
 												}
 											});
 							        	});
