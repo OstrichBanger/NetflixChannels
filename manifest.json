@@ -1,6 +1,6 @@
 {
   "name": "Netflix Channels",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "manifest_version": 2,
   "description": "Create channels to watch random episodes of your favorite shows on Netflix.",
   "homepage_url": "http://jonost.me",
